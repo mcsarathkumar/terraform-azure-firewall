@@ -123,6 +123,7 @@ resource "azurerm_public_ip" "firewall_pip" {
     location = local.location
     resource_group_name = local.hub_rg
     allocation_method = "Static"
+    sku = "Standard"
 }
 
 resource "azurerm_firewall_policy" "firewall_policy" {
