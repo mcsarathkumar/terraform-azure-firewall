@@ -151,7 +151,7 @@ resource "azurerm_log_analytics_workspace" "hub_log" {
     location           = local.location
     resource_group_name = azurerm_resource_group.hub_rg.name
     sku = "PerGB2018"
-      retention_in_days   = 7
+      retention_in_days   = 30
 }
 
 # resource "azurerm_monitor_diagnostic_setting" "firewall_hub_log" {
