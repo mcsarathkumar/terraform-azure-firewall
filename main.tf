@@ -106,6 +106,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   ]
 
   os_disk {
+    name = "windows-os-disk"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
