@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "hub_rg" {
 }
 
 resource "azurerm_resource_group" "spoke_rg" {
-  name = local.hub_rg
+  name = local.spoke_rg
   location = local.location
 }
 
@@ -32,7 +32,7 @@ resource "azurerm_virtual_network" "spoke_vnet" {
   name = "spoke-vnet"
   address_space = ["10.1.0.0/16"]
   location = local.location
-  resource_group_name = local.hub_rg
+  resource_group_name = local.spoke_rg
 }
 
 resource "azurerm_subnet" "spoke_vnet_subnet" {
