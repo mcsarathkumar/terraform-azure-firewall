@@ -18,12 +18,12 @@ resource "azurerm_virtual_network" "hub_vnet" {
   name = "hub-vnet"
   address_space = ["10.0.0.0/16"]
   location = local.location
-  resource_group_name = local.hub_rg
+  resource_group_name = azurerm_resource_group.hub_rg.name
 }
 
 resource "azurerm_subnet" "hub_vnet_subnet" {
   name                 = "AzureFirewallSubnet"
-  resource_group_name  = local.hub_rg
+  resource_group_name  = azurerm_resource_group.hub_rg.name
   virtual_network_name = azurerm_virtual_network.hub_vnet.name
   address_prefixes     = ["10.0.0.0/24"]
 }
@@ -32,12 +32,12 @@ resource "azurerm_virtual_network" "spoke_vnet" {
   name = "spoke-vnet"
   address_space = ["10.1.0.0/16"]
   location = local.location
-  resource_group_name = local.spoke_rg
+  resource_group_name = azurerm_resource_group.spoke_rg.name
 }
 
 resource "azurerm_subnet" "spoke_vnet_subnet" {
   name                 = "default"
-  resource_group_name  = local.spoke_rg
+  resource_group_name  = azurerm_resource_group.spoke_rg.name
   virtual_network_name = azurerm_virtual_network.spoke_vnet.name
   address_prefixes     = ["10.1.0.0/24"]
 }
@@ -45,14 +45,14 @@ resource "azurerm_subnet" "spoke_vnet_subnet" {
 
 resource "azurerm_virtual_network_peering" "hub_spoke_peer" {
     name = "hub-spoke-peer"
-    resource_group_name = local.hub_rg
+    resource_group_name = azurerm_resource_group.hub_rg.name
     virtual_network_name = azurerm_virtual_network.hub_vnet.name
     remote_virtual_network_id = azurerm_virtual_network.spoke_vnet.id
 }
 
 resource "azurerm_virtual_network_peering" "spoke_hub_peer" {
     name = "spoke-hub-peer"
-    resource_group_name = local.spoke_rg
+    resource_group_name = azurerm_resource_group.spoke_rg.name
     virtual_network_name = azurerm_virtual_network.spoke_vnet.name
     remote_virtual_network_id = azurerm_virtual_network.hub_vnet.id
 }
@@ -60,14 +60,14 @@ resource "azurerm_virtual_network_peering" "spoke_hub_peer" {
 resource "azurerm_public_ip" "windows_pip" {
     name = "windows-pip"
     location = local.location
-    resource_group_name = local.spoke_rg
+    resource_group_name = azurerm_resource_group.spoke_rg.name
     allocation_method = "Dynamic"
 }
 
 resource "azurerm_network_interface" "windows_nic" {
     name = "windows-nic"
     location = local.location
-    resource_group_name = local.spoke_rg
+    resource_group_name = azurerm_resource_group.spoke_rg.name
 
     ip_configuration {
         name                          = "internal"
@@ -79,7 +79,7 @@ resource "azurerm_network_interface" "windows_nic" {
 resource "azurerm_network_security_group" "spoke_nsg" {
   name = "spoke-nsg"
     location = local.location
-    resource_group_name = local.spoke_rg
+    resource_group_name = azurerm_resource_group.spoke_rg.name
 
     security_rule {
         name                       = "RDP"
@@ -96,7 +96,7 @@ resource "azurerm_network_security_group" "spoke_nsg" {
 
 resource "azurerm_windows_virtual_machine" "windows_vm" {
   name                = "windows-vm"
-  resource_group_name = local.spoke_rg
+  resource_group_name = azurerm_resource_group.spoke_rg.name
   location            = local.location
   size                = "Standard_B1s"
   admin_username      = "adminuser"
@@ -121,7 +121,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
 resource "azurerm_public_ip" "firewall_pip" {
     name = "firewall-pip"
     location = local.location
-    resource_group_name = local.hub_rg
+    resource_group_name = azurerm_resource_group.hub_rg.name
     allocation_method = "Static"
     sku = "Standard"
 }
@@ -129,13 +129,13 @@ resource "azurerm_public_ip" "firewall_pip" {
 resource "azurerm_firewall_policy" "firewall_policy" {
   name = "firewall-policy"
   location = local.location
-    resource_group_name = local.hub_rg
+    resource_group_name = azurerm_resource_group.hub_rg.name
 }
 
 resource "azurerm_firewall" "firewall" {
   name                = "firewall"
   location            = local.location
-  resource_group_name = local.hub_rg
+  resource_group_name = azurerm_resource_group.hub_rg.name
   sku_name            = "AZFW_VNet"
   sku_tier            = "Standard"
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
@@ -149,7 +149,7 @@ resource "azurerm_firewall" "firewall" {
 resource "azurerm_log_analytics_workspace" "hub_log" {
   name               = "hub-log"
     location           = local.location
-    resource_group_name = local.hub_rg
+    resource_group_name = azurerm_resource_group.hub_rg.name
     sku = "PerGB2018"
       retention_in_days   = 7
 }
