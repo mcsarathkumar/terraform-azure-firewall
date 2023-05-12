@@ -104,7 +104,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   name                = "windows-vm"
   resource_group_name = azurerm_resource_group.spoke_rg.name
   location            = local.location
-  size                = "Standard_B1s"
+  size                = "Standard_B2s"
   admin_username      = "adminuser"
   admin_password      = "P@ssword12345"
   network_interface_ids = [
