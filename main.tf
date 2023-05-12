@@ -160,7 +160,7 @@ resource "azurerm_monitor_diagnostic_setting" "firewall_hub_log" {
     target_resource_id = azurerm_firewall.firewall.id
     log_analytics_workspace_id = azurerm_log_analytics_workspace.hub_log.id
     enabled_log {
-        category = "allLogs"
+        category = "AllLogs"
         retention_policy {
             enabled = false
         }
