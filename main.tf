@@ -120,7 +120,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   source_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
-    sku       = "2019-Datacenter"
+    sku       = "2019-datacenter-gensecond"
     version   = "latest"
   }
 }
