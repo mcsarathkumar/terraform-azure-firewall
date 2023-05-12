@@ -95,6 +95,11 @@ resource "azurerm_network_security_group" "spoke_nsg" {
     }
 }
 
+resource "azurerm_subnet_network_security_group_association" "spoke_subnet_nsg" {
+    subnet_id = azurerm_subnet.spoke_vnet_subnet.id
+    network_security_group_id = azurerm_network_security_group.spoke_nsg.id
+}
+
 resource "azurerm_windows_virtual_machine" "windows_vm" {
   name                = "windows-vm"
   resource_group_name = azurerm_resource_group.spoke_rg.name
