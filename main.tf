@@ -73,6 +73,7 @@ resource "azurerm_network_interface" "windows_nic" {
         name                          = "internal"
         subnet_id = azurerm_subnet.spoke_vnet_subnet.id
         private_ip_address_allocation = "Dynamic"
+        public_ip_address_id = azurerm_public_ip.windows_pip.id
     }
 }
 
@@ -160,7 +161,7 @@ resource "azurerm_monitor_diagnostic_setting" "firewall_hub_log" {
     target_resource_id = azurerm_firewall.firewall.id
     log_analytics_workspace_id = azurerm_log_analytics_workspace.hub_log.id
     enabled_log {
-        category = "AllLogs"
+        category_group = "AllLogs"
         retention_policy {
             enabled = false
         }
